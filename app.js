@@ -7,6 +7,7 @@ let activeSection = "001";
 let currentList = [];
 let currentIndex = 0;
 let revealed = false;
+let currentMode = "ja-en";
 
 const $ = (selector) => document.querySelector(selector);
 const statusText = $("#statusText");
@@ -139,6 +140,7 @@ function refreshList() {
   });
   currentIndex = 0;
   revealed = false;
+  currentMode = pickMode();
   renderCard();
 }
 
@@ -153,24 +155,23 @@ function renderCard() {
   }
 
   const item = getCurrentItem();
-  const mode = resolveMode();
   const mark = state[item.id]?.mark ?? "none";
-  const prompt = mode === "ja-en" ? item.japanese : item.english;
-  const answer = mode === "ja-en" ? item.english : item.japanese;
+  const prompt = currentMode === "ja-en" ? item.japanese : item.english;
+  const answer = currentMode === "ja-en" ? item.english : item.japanese;
 
   statusText.textContent = `${activeSection} / ${sections.find((entry) => entry.id === activeSection).items.length}件`;
   counterText.textContent = `${currentIndex + 1} / ${currentList.length}`;
   stateText.textContent = markLabel(mark);
   promptText.textContent = prompt;
-  promptText.lang = mode === "ja-en" ? "ja" : "en";
+  promptText.lang = currentMode === "ja-en" ? "ja" : "en";
   answerText.textContent = answer;
-  answerText.lang = mode === "ja-en" ? "en" : "ja";
+  answerText.lang = currentMode === "ja-en" ? "en" : "ja";
   answerBox.hidden = !revealed;
   knownButton.classList.toggle("active", mark === "known");
   perfectButton.classList.toggle("active", mark === "perfect");
 }
 
-function resolveMode() {
+function pickMode() {
   const mode = getRadioValue("mode");
   if (mode !== "random") return mode;
   return Math.random() > 0.5 ? "ja-en" : "en-ja";
@@ -184,6 +185,7 @@ function nextCard() {
   if (currentList.length === 0) return;
   currentIndex = (currentIndex + 1) % currentList.length;
   revealed = false;
+  currentMode = pickMode();
   renderCard();
 }
 
@@ -197,6 +199,7 @@ function randomCard() {
     currentIndex = next;
   }
   revealed = false;
+  currentMode = pickMode();
   renderCard();
 }
 
