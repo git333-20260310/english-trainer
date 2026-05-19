@@ -45,7 +45,7 @@ async function init() {
 
 async function loadRawData() {
   const source = await fetch(`${SOURCE_URL}?v=${Date.now()}`).then((res) => res.text());
-  const match = source.match(/const DATA="([^"]+)"/);
+  const match = source.match(/const\s+DATA\s*=\s*"([^"]+)"/);
   if (match) return decodeGzipBase64(match[1]);
 
   const rawMatch = source.match(/const RAW = String\.raw`([\s\S]*?)`;/);
@@ -56,8 +56,27 @@ async function loadRawData() {
 
 async function decodeGzipBase64(data) {
   const bytes = Uint8Array.from(atob(data), (char) => char.charCodeAt(0));
-  const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream("gzip"));
+  if (!("DecompressionStream" in window)) {
+    throw new Error("このブラウザは教材データの展開に対応していません");
+  }
+  const body = stripGzipWrapper(bytes);
+  const stream = new Blob([body]).stream().pipeThrough(new DecompressionStream("deflate-raw"));
   return new Response(stream).text();
+}
+
+function stripGzipWrapper(bytes) {
+  let position = 10;
+  const flags = bytes[3];
+
+  if (flags & 4) {
+    const length = bytes[position] | (bytes[position + 1] << 8);
+    position += 2 + length;
+  }
+  if (flags & 8) while (bytes[position++] !== 0) {}
+  if (flags & 16) while (bytes[position++] !== 0) {}
+  if (flags & 2) position += 2;
+
+  return bytes.slice(position, bytes.length - 8);
 }
 
 function parseRaw(raw) {
