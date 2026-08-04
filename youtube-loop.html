@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#111318" />
+    <title>Loop45 — YouTube区間リピート</title>
+    <meta name="description" content="YouTube動画の好きな区間だけを繰り返し再生する、英語リスニング用プレーヤー。" />
+    <link rel="stylesheet" href="./youtube-loop.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="hero">
+        <a class="back-link" href="./">← English Trainer</a>
+        <div class="hero-copy">
+          <p class="eyebrow">LISTEN TO THE FUTURE</p>
+          <h1>Loop<span>45</span></h1>
+          <p class="lead">ワクワクした45秒を、聞こえるまで。</p>
+        </div>
+        <div class="status-line" aria-live="polite">
+          <span id="statusDot" class="status-dot"></span>
+          <span id="statusText">URLを入れて動画を読み込んでください</span>
+        </div>
+      </header>
+
+      <section class="panel input-panel" aria-labelledby="video-heading">
+        <div class="section-heading">
+          <span class="step">01</span>
+          <div><h2 id="video-heading">動画を選ぶ</h2><p>YouTube、youtu.be、ShortsのURLに対応</p></div>
+        </div>
+        <div class="url-row">
+          <label class="sr-only" for="videoUrl">YouTube URL</label>
+          <input id="videoUrl" type="url" inputmode="url" autocomplete="off" placeholder="https://www.youtube.com/watch?v=..." />
+          <button id="loadButton" class="primary" type="button">読み込む</button>
+        </div>
+        <button id="sampleButton" class="text-button" type="button">サンプル動画で試す</button>
+      </section>
+
+      <section class="player-card" aria-label="YouTubeプレーヤー">
+        <div class="player-frame"><div id="player"></div></div>
+        <div class="now-playing">
+          <div>
+            <p class="mini-label">NOW PLAYING</p>
+            <p id="videoTitle" class="video-title">動画を読み込むとタイトルが表示されます</p>
+          </div>
+          <div class="clock"><span id="currentTime">0:00</span><span>/</span><span id="durationTime">0:00</span></div>
+        </div>
+        <div class="progress-track" aria-hidden="true"><span id="progressBar"></span></div>
+      </section>
+
+      <section class="panel" aria-labelledby="segment-heading">
+        <div class="section-heading">
+          <span class="step">02</span>
+          <div><h2 id="segment-heading">区間を決める</h2><p>再生中の位置をそのまま登録できます</p></div>
+        </div>
+        <div class="time-grid">
+          <div class="time-field">
+            <label for="startTime">開始</label>
+            <div class="time-control"><input id="startTime" value="0:00" inputmode="numeric" aria-describedby="timeHint" /><button id="setStartButton" type="button">現在位置</button></div>
+          </div>
+          <div class="time-field">
+            <label for="endTime">終了</label>
+            <div class="time-control"><input id="endTime" value="0:45" inputmode="numeric" aria-describedby="timeHint" /><button id="setEndButton" type="button">現在位置</button></div>
+          </div>
+        </div>
+        <p id="timeHint" class="hint">入力例：45、1:20、01:02:10</p>
+        <div class="segment-summary">
+          <span>区間の長さ</span><strong id="segmentLength">45秒</strong>
+        </div>
+      </section>
+
+      <section class="transport" aria-label="再生操作">
+        <button id="playSegmentButton" class="play-button" type="button"><span aria-hidden="true">▶</span> 区間を再生</button>
+        <div class="transport-row">
+          <button id="backButton" type="button" aria-label="5秒戻る">−5秒</button>
+          <button id="toggleButton" type="button">再生 / 停止</button>
+          <button id="forwardButton" type="button" aria-label="5秒進む">+5秒</button>
+        </div>
+        <div class="options-row">
+          <label class="switch-label"><input id="loopToggle" type="checkbox" checked /><span class="switch"></span><span>区間リピート</span></label>
+          <label class="speed-label" for="speedSelect">速度<select id="speedSelect"><option value="0.5">0.5×</option><option value="0.75">0.75×</option><option value="1" selected>1.0×</option><option value="1.25">1.25×</option><option value="1.5">1.5×</option><option value="2">2.0×</option></select></label>
+        </div>
+        <div class="repeat-count"><span id="repeatCount">0</span><small>REPEATS</small></div>
+        <p class="caption-note">英語字幕はプレーヤー内の「CC」から切り替えられます。</p>
+      </section>
+
+      <section class="panel save-panel" aria-labelledby="save-heading">
+        <div class="section-heading">
+          <span class="step">03</span>
+          <div><h2 id="save-heading">また聞く</h2><p>区間はこの端末に保存されます</p></div>
+        </div>
+        <div class="save-actions">
+          <button id="saveButton" type="button">この区間を保存</button>
+          <button id="shareButton" type="button">共有URLをコピー</button>
+        </div>
+        <div id="savedList" class="saved-list"><p class="empty-state">保存した区間はまだありません。</p></div>
+      </section>
+
+      <footer>
+        <p>YouTubeの公式埋め込みプレーヤーを使用しています。埋め込み不可の動画は再生できません。</p>
+      </footer>
+    </main>
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <script src="./youtube-loop.js?v=20260804-1"></script>
+  </body>
+</html>

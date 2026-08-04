@@ -17,6 +17,18 @@ GitHub Pagesを有効にすると、次のURLで開けます。
 
 https://git333-20260310.github.io/english-trainer/
 
+## YouTube区間リピート
+
+YouTube動画の開始・終了時間を指定して、好きな区間だけを繰り返し再生できます。
+
+- YouTube、短縮URL、ShortsのURLに対応
+- 現在位置から開始・終了時間を登録
+- 区間リピート、速度変更、リピート回数
+- お気に入り区間の端末保存
+- 区間を含む共有URLのコピー
+
+https://git333-20260310.github.io/english-trainer/youtube-loop.html
+
 ## メモ
 
 教材データは english-memorizer の公開済みアプリから読み込んでいます。
